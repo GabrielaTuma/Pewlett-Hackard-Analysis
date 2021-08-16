@@ -26,3 +26,15 @@ SELECT DISTINCT ON (emp_no)
 INTO unique_titles
 FROM retirement_titles
 ORDER BY emp_no, to_date DESC;
+
+
+-- SEVEN DIFFERENT TITLES 
+SELECT COUNT (DISTINCT title)
+FROM unique_titles
+
+
+SELECT title, COUNT (emp_no) as title_qty 
+-- INTO retiring_titles
+FROM unique_titles
+GROUP BY title
+ORDER BY title_qty DESC
