@@ -57,3 +57,40 @@ ON (e.emp_no = tl.emp_no)
 
 WHERE (e.birth_date BETWEEN '1965-01-01' AND '1965-12-31')
      AND (de.to_date = '9999-01-01');
+
+
+DELIVERABLE 3
+SELECT COUNT(e.emp_no) as emp_count, 
+             de.dept_no
+--INTO total_dept_count
+FROM employees as e
+LEFT JOIN dept_employees as de
+ON e.emp_no = de.emp_no
+GROUP BY de.dept_no
+ORDER BY de.dept_no;
+
+
+
+SELECT COUNT(e.emp_no) as emp_count, 
+             de.dept_no
+--INTO retiring_count
+FROM employees as e
+LEFT JOIN dept_employees as de
+ON e.emp_no = de.emp_no
+WHERE (e.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
+	 AND (de.to_date = '9999-01-01')
+GROUP BY de.dept_no
+ORDER BY de.dept_no;
+
+
+
+SELECT rc.dept_no,
+       tc.emp_count as dept_total_count,
+       rc.emp_count as retiring_count,
+       round(rc.emp_count::numeric/tc.emp_count::numeric, 3)*100 as "percentage (%)"      
+INTO percentage_dept
+FROM retiring_count as rc
+INNER JOIN total_dept_count as tc
+ON rc.dept_no = tc.dept_no
+
+
