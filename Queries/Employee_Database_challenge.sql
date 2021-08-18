@@ -22,8 +22,7 @@ SELECT DISTINCT ON (emp_no)
     first_name,
     last_name,
     title
-
-INTO unique_titles
+--INTO unique_titles
 FROM retirement_titles
 ORDER BY emp_no, to_date DESC;
 
@@ -48,7 +47,7 @@ SELECT DISTINCT ON (emp_no)
 	   de.from_date,
        de.to_date,
 	   tl.title
-INTO mentorship_eligibilty
+--INTO mentorship_eligibilty
 FROM employees as e
 INNER JOIN dept_employees as de
 ON (e.emp_no = de.emp_no)
@@ -59,7 +58,7 @@ WHERE (e.birth_date BETWEEN '1965-01-01' AND '1965-12-31')
      AND (de.to_date = '9999-01-01');
 
 
-DELIVERABLE 3
+-- COUNT PER DEPARTMENT 
 SELECT COUNT(e.emp_no) as emp_count, 
              de.dept_no
 --INTO total_dept_count
@@ -88,9 +87,40 @@ SELECT rc.dept_no,
        tc.emp_count as dept_total_count,
        rc.emp_count as retiring_count,
        round(rc.emp_count::numeric/tc.emp_count::numeric, 3)*100 as "percentage (%)"      
-INTO percentage_dept
+--INTO percentage_dept
 FROM retiring_count as rc
 INNER JOIN total_dept_count as tc
 ON rc.dept_no = tc.dept_no
 
 
+
+-- MENTORSHIP PER DEPARTMENT 
+SELECT DISTINCT ON (me.emp_no)
+       me.emp_no,
+       me.first_name,
+	   me.last_name,
+	   me.birth_date,
+	   me.to_date,
+	   me.title,
+	   de.dept_no
+INTO mentorship_dept
+FROM mentorship_eligibilty as me
+LEFT JOIN dept_employees as de
+ON me.emp_no = de.emp_no
+	   
+
+
+
+
+SELECT md.emp_no,
+       md.first_name,
+	   md.last_name,
+	   md.birth_date,
+	   md.title,
+	   md.dept_no,
+	   dt.dept_name
+INTO mentorship_by_dept
+FROM mentorship_dept as md
+LEFT JOIN departments as dt 
+ON md.dept_no = dt.dept_no
+ORDER BY md.dept_no;
